@@ -1,3 +1,3 @@
-# Boilerplate REMN Stack
+# React Shop Game
 
-Boilerplate when you use REACT JS, EXPRESS JS, MONGO DB, NODE JS
+Examples of shopping mall sites using REACT JS and EXPRESS JS, MONG DB, and NODE JS
