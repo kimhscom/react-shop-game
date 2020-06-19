@@ -3,6 +3,13 @@ import { Button, Form, Input } from "antd";
 
 const { TextArea } = Input;
 
+const Categories = [
+  { key: 1, value: "PlayStation4" },
+  { key: 2, value: "XBOX One" },
+  { key: 3, value: "Nintendo Switch" },
+  { key: 4, value: "PC Game" },
+];
+
 function UploadProductPage() {
   const [Title, setTitle] = useState("");
   const [Description, setDescription] = useState("");
@@ -20,6 +27,10 @@ function UploadProductPage() {
 
   const priceChangeHandler = (event) => {
     setPrice(event.currentTarget.value);
+  };
+
+  const categoryChangeHandler = (event) => {
+    setCategory(event.currentTarget.value);
   };
 
   return (
@@ -43,8 +54,12 @@ function UploadProductPage() {
         <Input type="number" onChange={priceChangeHandler} value={Price} />
         <br />
         <br />
-        <select>
-          <option></option>
+        <select onChange={categoryChangeHandler} value={Category}>
+          {Categories.map((item) => (
+            <option key={item.key} value={item.key}>
+              {item.value}
+            </option>
+          ))}
         </select>
         <br />
         <br />
