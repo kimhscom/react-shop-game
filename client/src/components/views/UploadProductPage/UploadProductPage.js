@@ -34,6 +34,10 @@ function UploadProductPage() {
     setCategory(event.currentTarget.value);
   };
 
+  const updateImages = (newImages) => {
+    setImages(newImages);
+  };
+
   return (
     <div style={{ maxWidth: "700px", margin: "2rem auto" }}>
       <div style={{ textAlign: "center", marginBottom: "2rem" }}>
@@ -41,7 +45,7 @@ function UploadProductPage() {
       </div>
       <Form>
         {/* DropZone */}
-        <FileUpload />
+        <FileUpload refreshFunction={updateImages} />
         <br />
         <br />
         <label>Title</label>
