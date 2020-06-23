@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Button, Form, Input } from "antd";
 import FileUpload from "../../utils/FileUpload";
+import Axios from "axios";
 
 const { TextArea } = Input;
 
@@ -11,7 +12,7 @@ const Categories = [
   { key: 4, value: "PC Game" },
 ];
 
-function UploadProductPage() {
+function UploadProductPage(props) {
   const [Title, setTitle] = useState("");
   const [Description, setDescription] = useState("");
   const [Price, setPrice] = useState(0);
@@ -38,12 +39,40 @@ function UploadProductPage() {
     setImages(newImages);
   };
 
+  const submitHandler = (event) => {
+    event.preventDefault();
+
+    if (!Title || !Description || !Price || !Category || !Images) {
+      return alert("You must have to put in all the values.");
+    }
+
+    // Send the filled values to the server as a request.
+
+    const body = {
+      writer: props.user.userData._id,
+      title: Title,
+      description: Description,
+      price: Price,
+      category: Category,
+      images: Images,
+    };
+
+    Axios.post("/api/product", body).then((response) => {
+      if (response.data.success) {
+        alert("Succeeded to upload product.");
+        props.history.push("/");
+      } else {
+        alert("Failed to upload product.");
+      }
+    });
+  };
+
   return (
     <div style={{ maxWidth: "700px", margin: "2rem auto" }}>
       <div style={{ textAlign: "center", marginBottom: "2rem" }}>
         <h2>Game Product Upload</h2>
       </div>
-      <Form>
+      <Form onSubmit={submitHandler}>
         {/* DropZone */}
         <FileUpload refreshFunction={updateImages} />
         <br />
@@ -69,7 +98,7 @@ function UploadProductPage() {
         </select>
         <br />
         <br />
-        <Button>Submit</Button>
+        <Button onClick={submitHandler}>Submit</Button>
       </Form>
     </div>
   );
