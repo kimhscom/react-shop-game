@@ -1,11 +1,29 @@
 import React from "react";
 import Dropzone from "react-dropzone";
 import { Icon } from "antd";
+import axios from "axios";
+import { response } from "express";
 
 function FileUpload() {
+  const dropHandler = (files) => {
+    let formData = new FormData();
+
+    const config = {
+      header: { "content-type": "multipart/form-data" },
+    };
+    formData.append("file", files[0]);
+
+    axios.post("/api/product/image", formData, config).then((response) => {
+      if (reponse.data.success) {
+      } else {
+        alert("Failed to save file.");
+      }
+    });
+  };
+
   return (
     <div style={{ display: "flex", justifyContent: "space-between" }}>
-      <Dropzone onDrop={(acceptedFiles) => console.log(acceptedFiles)}>
+      <Dropzone onDrop={dropHandler}>
         {({ getRootProps, getInputProps }) => (
           <div
             style={{
