@@ -60,6 +60,8 @@ function LandingPage() {
     );
   });
 
+  const handleFilters = () => {};
+
   return (
     <div style={{ width: "75%", margin: "3rem auto" }}>
       <div style={{ textAlign: "center" }}>
@@ -71,7 +73,10 @@ function LandingPage() {
       {/* Filter */}
 
       {/* CheckBox */}
-      <Checkbox list={category} />
+      <Checkbox
+        list={category}
+        handleFilters={(filters) => handleFilters(filters, "category")}
+      />
 
       {/* RadioBox */}
 
