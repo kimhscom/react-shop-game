@@ -12,6 +12,10 @@ function LandingPage() {
   const [Skip, setSkip] = useState(0);
   const [Limit, setLimit] = useState(8);
   const [PostSize, setPostSize] = useState(0);
+  const [Filters, setFilters] = useState({
+    category: [],
+    price: [],
+  });
 
   useEffect(() => {
     let body = {
@@ -60,7 +64,24 @@ function LandingPage() {
     );
   });
 
-  const handleFilters = () => {};
+  const showFilterResults = (filters) => {
+    let body = {
+      skip: 0,
+      limit: Limit,
+      filters: filters,
+    };
+
+    getProducts(body);
+    setSkip(0);
+  };
+
+  const handleFilters = (filters, type) => {
+    const newFilters = { ...Filters };
+
+    newFilters[type] = filters;
+
+    showFilterResults(newFilters);
+  };
 
   return (
     <div style={{ width: "75%", margin: "3rem auto" }}>
