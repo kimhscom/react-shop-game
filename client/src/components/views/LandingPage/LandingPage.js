@@ -76,12 +76,33 @@ function LandingPage() {
     setSkip(0);
   };
 
+  const handlePrice = (value) => {
+    const data = price;
+    let array = [];
+
+    for (let key in data) {
+      if (data[key]._id === parseInt(value, 10)) {
+        array = data[key].array;
+      }
+    }
+
+    return array;
+  };
+
   const handleFilters = (filters, type) => {
     const newFilters = { ...Filters };
 
     newFilters[type] = filters;
 
+    console.log("filters", filters);
+
+    if (type === "price") {
+      let priceValues = handlePrice(filters);
+      newFilters[type] = priceValues;
+    }
+
     showFilterResults(newFilters);
+    setFilters(newFilters);
   };
 
   return (
