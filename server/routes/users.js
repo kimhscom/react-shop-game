@@ -71,9 +71,49 @@ router.get("/logout", auth, (req, res) => {
 
 router.post("/addToCart", auth, (req, res) => {
   // Import information for that user into User Collection first
-  // Verify that the information you have imported already contains the items you want to put in the cart
-  // When the products were already in stock
-  // When the products are not already present
+  User.findOne({ _id: req.user._id }, (err, userInfo) => {
+    // Verify that the information you have imported already contains the items you want to put in the cart
+    let duplicate = false;
+
+    userInfo.cart.forEach((item) => {
+      if (item.id === req.body.productId) {
+        duplicate = true;
+      }
+    });
+
+    // When the products were already in stock
+    if (duplicate) {
+      User.findOneAndUpdate(
+        { _id: req.user._id, "cart.id": req.body.productId },
+        { $inc: { "cart.$.quanity": 1 } },
+        { new: true },
+        (err, userInfo) => {
+          if (err) return res.status(200).json({ success: false, err });
+          res.status(200).send(userInfo.cart);
+        }
+      );
+    }
+    // When the products are not already present
+    else {
+      User.findOneAndUpdate(
+        { _id: req.user._id },
+        {
+          $push: {
+            cart: {
+              id: req.body.productId,
+              quanity: 1,
+              date: Date.now(),
+            },
+          },
+        },
+        { new: true },
+        (err, userInfo) => {
+          if (err) return res.status(400).json({ success: false, err });
+          res.status(200).send(userInfo.cart);
+        }
+      );
+    }
+  });
 });
 
 module.exports = router;

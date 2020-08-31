@@ -17,7 +17,13 @@ export default function (state = {}, action) {
     case LOGOUT_USER:
       return { ...state };
     case ADD_TO_CART:
-      return { ...state };
+      return {
+        ...state,
+        userData: {
+          ...state.userData,
+          cart: action.payload,
+        },
+      };
     default:
       return state;
   }
