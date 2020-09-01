@@ -13,13 +13,9 @@ function DetailProductPage(props) {
     axios
       .get(`/api/product/products_by_id?id=${productId}&type=single`)
       .then((response) => {
-        if (response.data.success) {
-          console.log("response.data", response.data);
-          setProduct(response.data.product[0]);
-        } else {
-          alert("Failed to get detail information.");
-        }
-      });
+        setProduct(response.data[0]);
+      })
+      .catch((err) => alert(err));
   }, []);
 
   return (
