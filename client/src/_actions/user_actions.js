@@ -70,13 +70,21 @@ export function addToCart(id) {
 
 export function getCartItem(cartItems, userCart) {
   const request = axios
-    .get(`/api/product/products_by_id?id=${cartItems}&type=array`, body)
+    .get(`/api/product/products_by_id?id=${cartItems}&type=array`)
     .then((response) => {
       /*
       After importing the information
       corresponding to CartItem from Product Collection, 
       the Quantity information is included.
       */
+      userCart.forEach((cartItem) => {
+        response.data.product.forEach((productDetail, index) => {
+          if (cartItem.id === productDetail._id) {
+            response.data.product[index].quantity = cartItem.quantity;
+          }
+        });
+      });
+      return response.data;
     });
 
   return {

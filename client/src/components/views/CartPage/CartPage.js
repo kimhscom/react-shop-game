@@ -17,7 +17,7 @@ function CartPage(props) {
         dispatch(getCartItem(cartItem, props.user.userData.cart));
       }
     }
-  }, []);
+  }, [props.user.userData]);
 
   return <div>CartPage</div>;
 }
