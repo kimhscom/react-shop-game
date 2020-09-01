@@ -101,12 +101,22 @@ router.post("/products", (req, res) => {
   }
 });
 
+// id = 123123123, 324234234, 324234234  type=array
 router.get("/products_by_id", (req, res) => {
   let type = req.query.type;
-  let productId = req.query.id;
+  let productIds = req.query.id;
+
+  if (type === "array") {
+    // id = 123123123,324234234,324234234 This
+    // productIds = ['123123123', '324234234', '324234234'] To change to this way
+    let ids = req.query.id.split(",");
+    productIds = ids.map((item) => {
+      return item;
+    });
+  }
 
   // Using productId, get information about products such as productId from DB.
-  Product.find({ _id: productId })
+  Product.find({ _id: { $in: productIds } })
     .populate("writer")
     .exec((err, product) => {
       if (err) return res.status(400).send(err);

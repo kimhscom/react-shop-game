@@ -5,6 +5,7 @@ import {
   AUTH_USER,
   LOGOUT_USER,
   ADD_TO_CART,
+  GET_CART_ITEMS,
 } from "./types";
 import { USER_SERVER } from "../components/Config.js";
 
@@ -63,6 +64,23 @@ export function addToCart(id) {
 
   return {
     type: ADD_TO_CART,
+    payload: request,
+  };
+}
+
+export function getCartItem(cartItems, userCart) {
+  const request = axios
+    .get(`/api/product/products_by_id?id=${cartItems}&type=array`, body)
+    .then((response) => {
+      /*
+      After importing the information
+      corresponding to CartItem from Product Collection, 
+      the Quantity information is included.
+      */
+    });
+
+  return {
+    type: GET_CART_ITEMS,
     payload: request,
   };
 }
