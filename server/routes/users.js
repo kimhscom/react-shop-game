@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const { User } = require("../models/User");
-
+const { Product } = require("../models/Product");
 const { auth } = require("../middleware/auth");
 
 //=================================
@@ -116,6 +116,34 @@ router.post("/addToCart", auth, (req, res) => {
       );
     }
   });
+});
+
+router.get("/removeFromCart", auth, (req, res) => {
+  // First, erase the product that I tried to delete in the cart.
+  User.findOneAndUpdate(
+    { _id: req.user._id },
+    {
+      $pull: { cart: { id: req.query.id } },
+    },
+    { new: true },
+    (err, userInfo) => {
+      let cart = userInfo.cart;
+      let array = cart.map((item) => {
+        return item.id;
+      });
+
+      // Import information from product collection about currently remaining products
+      // productIds = ['5e8961794be6d81ce2b94752', '5e8960d721e2ca1cb3e30de4'] To change to this way
+      Product.find({ _id: { $in: array } })
+        .populate("writer")
+        .exec((err, productInfo) => {
+          return res.status(200).json({
+            productInfo,
+            cart,
+          });
+        });
+    }
+  );
 });
 
 module.exports = router;
