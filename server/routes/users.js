@@ -1,5 +1,6 @@
 const express = require("express");
 const router = express.Router();
+const async = require("async");
 const { User } = require("../models/User");
 const { Product } = require("../models/Product");
 const { Payment } = require("../models/Payment");
@@ -153,7 +154,7 @@ router.post("/successBuy", auth, (req, res) => {
   let transactionData = {};
 
   req.body.cartDetail.forEach((item) => {
-    history.puch({
+    history.push({
       dateOfPurchase: Date.now(),
       name: item._id,
       price: item.price,
@@ -179,16 +180,45 @@ router.post("/successBuy", auth, (req, res) => {
     { new: true },
     (err, user) => {
       if (err) return res.json({ success: false, err });
+
+      // Save transactionData information in payment
+      const payment = new Payment(transactionData);
+      payment.save((err, doc) => {
+        if (err) return res.json({ success: false, err });
+
+        // 3. Update the sold field information in the Product Collection
+
+        // How many quantities did you buy per product?
+        let products = [];
+        doc.product.forEach((item) => {
+          products.push({ id: item.id, quantity: item.quantity });
+        });
+
+        async.eachSeries(
+          products,
+          (item, callback) => {
+            Product.update(
+              { _id: item.id },
+              {
+                $inc: {
+                  sold: item.quantity,
+                },
+              },
+              { new: false },
+              callback
+            );
+          },
+          (err) => {
+            if (err) return res.status(400).json({ success: false, err });
+            res.status(200).json({
+              success: true,
+              cart: user.cart,
+              cartDetail: [],
+            });
+          }
+        );
+      });
     }
-
-    // Save transactionData information in payment
-    const payment = new Payment(transactionData)
-    payment.save((err, doc) => {
-      if(err) return res.json({ success: false, err });
-
-      // 3. Update the sold field information in the Product Collection
-
-    })
   );
 });
 
