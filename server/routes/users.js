@@ -146,4 +146,23 @@ router.get("/removeFromCart", auth, (req, res) => {
   );
 });
 
+router.post("/successBuy", auth, (req, res) => {
+  // 1. Insert simple payment information into the History field within the User Collection
+  let history = [];
+  let transactionData = {};
+
+  req.body.cartDetail.forEach((item) => {
+    history.puch({
+      dateOfPurchase: Date.now(),
+      name: item._id,
+      price: item.price,
+      quantity: item.quantity,
+      paymentId: req.body.paymentData.paymentID,
+    });
+  });
+
+  // 2. Insert detailed payment information in Payment Collection
+  // 3. Update the sold field information in the Product Collection
+});
+
 module.exports = router;
