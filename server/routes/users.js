@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const { User } = require("../models/User");
 const { Product } = require("../models/Product");
+const { Payment } = require("../models/Payment");
 const { auth } = require("../middleware/auth");
 
 //=================================
@@ -162,7 +163,33 @@ router.post("/successBuy", auth, (req, res) => {
   });
 
   // 2. Insert detailed payment information in Payment Collection
-  // 3. Update the sold field information in the Product Collection
+  transactionData.user = {
+    id: req.user._id,
+    name: req.user.name,
+    email: req.user.email,
+  };
+
+  transactionData.data = req.body.paymentData;
+  transactionData.product = history;
+
+  // Save history information
+  User.findOneAndUpdate(
+    { _id: req.user._id },
+    { $push: { history: history }, $set: { cart: [] } },
+    { new: true },
+    (err, user) => {
+      if (err) return res.json({ success: false, err });
+    }
+
+    // Save transactionData information in payment
+    const payment = new Payment(transactionData)
+    payment.save((err, doc) => {
+      if(err) return res.json({ success: false, err });
+
+      // 3. Update the sold field information in the Product Collection
+
+    })
+  );
 });
 
 module.exports = router;
