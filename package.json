@@ -32,6 +32,7 @@
     "supports-color": "^7.1.0"
   },
   "devDependencies": {
+    "bl": "^4.0.3",
     "concurrently": "^4.1.0",
     "lodash": "^4.17.19",
     "nodemon": "^1.19.1"
