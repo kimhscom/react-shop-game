@@ -34,7 +34,7 @@
   "devDependencies": {
     "bl": "^4.0.3",
     "concurrently": "^4.1.0",
-    "lodash": "^4.17.19",
+    "lodash": "^4.17.21",
     "nodemon": "^1.19.1",
     "yargs-parser": "^19.0.4"
   }
